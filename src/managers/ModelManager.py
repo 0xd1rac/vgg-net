@@ -1,10 +1,10 @@
 from src.common_imports import *
 from tqdm import tqdm
-import src.model
+import src.model as model
 
 class ModelManager():
     @staticmethod
-    def train_one_epoch(model: src.model.VGG,
+    def train_one_epoch(model: model.VGG,
                         train_dl: DataLoader,
                         loss_fn: nn.Module,
                         optimizer: torch.optim.Optimizer,
@@ -37,7 +37,7 @@ class ModelManager():
 
 
     @staticmethod
-    def train(model: src.model.VGG,
+    def train(model: model.VGG,
               train_dl: DataLoader, 
               loss_fn: nn.Module,
               optimizer: torch.optim.Optimizer,
@@ -64,7 +64,7 @@ class ModelManager():
         return epoch_loss_lis, epoch_acc_lis
 
     @staticmethod
-    def predict(model: src.model.VGG, 
+    def predict(model: model.VGG, 
                 dataloader: DataLoader, 
                 device: torch.device
                 ):
@@ -84,7 +84,7 @@ class ModelManager():
         return all_preds, all_labels
 
     @staticmethod
-    def get_acc(model:src.model.VGG, 
+    def get_acc(model:model.VGG, 
                 dataloader: DataLoader, 
                 device: torch.device
                 ):
@@ -95,7 +95,7 @@ class ModelManager():
         return acc
 
     @staticmethod
-    def save(model: src.model.VGG, 
+    def save(model: model.VGG, 
              file_path: str, 
              epoch_loss_lis: List[float], 
              epoch_acc_lis: List[float]
@@ -118,7 +118,7 @@ class ModelManager():
         if os.path.exists(file_path):
             checkpoint = torch.load(file_path)
             model_name = checkpoint['model_name']
-            model = src.model.VGG(model_name)
+            model = model.VGG(model_name)
             model.load_state_dict(checkpoint['model_state_dict'])
             model.epoch_loss_lis = checkpoint['epoch_loss_lis']
             model.epoch_acc_lis= checkpoint['epoch_acc_lis']
@@ -138,7 +138,7 @@ class ModelManager():
         pass
 
     @staticmethod
-    def count_layers(model: src.model.VGG):
+    def count_layers(model: model.VGG):
         type_to_count = dict()
         for module in model.modules():
             if module.__class__.__name__ in type_to_count:
