@@ -1,8 +1,10 @@
-import multiprocessing
 import torch
 import src.managers as managers
-import src.model as model
+import src.model_components as model_components
 import torch.nn as nn
+
+def set_up_weights_folder(weights_folder_path: str):
+    pass
 
 if __name__ == "__main__":
     BATCH_SIZE = 256
@@ -22,9 +24,9 @@ if __name__ == "__main__":
         train_transform = managers.TransformManager.get_train_transform(s_min=scale, s_max=scale, img_height=32, img_width=32)                                    
         train_dl = managers.DataManager.get_train_dl(train_transform, BATCH_SIZE, NUM_WORKERS)
         loss_fn = nn.CrossEntropyLoss()
-        for name in model.Arch.ARCH.keys():
+        for name in model_components.Arch.ARCH.keys():
             print(f"Model: {name}")
-            model = model.VGG(name)
+            model = model_components.VGG(name)
             optimizer = torch.optim.SGD(model.parameters(),
                                         lr=LEARNING_RATE,
                                         momentum=MOMENTUM,
@@ -38,3 +40,6 @@ if __name__ == "__main__":
                                         device=DEVICE,
                                         num_epochs=NUM_EPOCHS
                                         )
+            
+            file_path = f"{MODELS_FOLDER}/scale_{scale}/{name}_scale_{scale}.pth"
+            managers.ModelManager.save(model, file_path )

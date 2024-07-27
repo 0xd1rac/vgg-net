@@ -11,8 +11,8 @@ class VGG(nn.Module):
         self.conv_fcs = self.create_conv_fcs(num_classes)
         self._initialize_weights()
 
-        self.epoch_loss_lis = None
-        self.epoch_acc_lis = None
+        self.epoch_loss_lis = list()
+        self.epoch_acc_lis = list()
 
     def forward(self, x):
         x = self.conv_layers(x)

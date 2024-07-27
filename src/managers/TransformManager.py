@@ -10,6 +10,7 @@ class TransformManager:
         if s_min == s_max:
             training_scale = s_min
         else:
+            # Sample a scaling number if it's for mult-scale training
             training_scale = random.randint(s_min, s_max)
         
         train_transform = transforms.Compose([

@@ -1,2 +1,4 @@
 myenv/
 weights/
+*/__pycache__/
+src/managers/__pycache__/

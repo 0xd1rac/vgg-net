@@ -1,10 +1,11 @@
 import torch
 import src.managers as managers
-import src.model as model
+import src.model_components as model_components
 import torch.nn as nn
+import os
 
-def load_scale_54_models(folder_paths:str):
-    models = list()
+def load_scale_54_models(folder_path:str):
+    return [managers.ModelManager.load(os.path.join(folder_path,name)) for name in os.listdir(folder_path)]
 
 def set_up_weights_folder(weights_folder_path:str):
     pass
@@ -28,12 +29,27 @@ if __name__ == "__main__":
     scale_54_models = load_scale_54_models("weights/scale_54")
     train_transform = managers.TransformManager.get_train_transform(scale_min, scale_max, IMG_DIM, IMG_DIM)
     train_dl = managers.DataManager.get_train_dl(train_transform, BATCH_SIZE, NUM_WORKERS)
+    loss_fn = nn.CrossEntropyLoss()
 
-    
     for model in scale_54_models:
-        managers.ModelManager.train(model)
-        file_path = ""
-        managers.ModelManager.save(model)
+        print(f"[INFO] Training Model {model.name} for scales {scale_min} - {scale_max}")
+        optimizer = torch.optim.SGD(model.parameters(),
+                                    lr=LEARNING_RATE,
+                                    momentum=MOMENTUM,
+                                    weight_decay=WEIGHT_DECAY
+                                    )
+
+        epoch_loss_lis, epoch_acc_lis = managers.ModelManager.train(model=model,
+                                        train_dl=train_dl,
+                                        loss_fn=loss_fn,
+                                        optimizer=optimizer,
+                                        device=DEVICE,
+                                        num_epochs=NUM_EPOCHS
+                                        )
+        
+        file_path = f"{MODELS_FOLDER}/multiscale/{model.name}_multiscale_{scale_min}-{scale_max}.pth"
+        managers.ModelManager.save(model, file_path)
+        
 
 
 

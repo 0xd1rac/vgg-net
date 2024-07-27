@@ -1,10 +1,10 @@
 from src.common_imports import *
 from tqdm import tqdm
-import src.model as model
+import src.model_components as model_components
 
 class ModelManager():
     @staticmethod
-    def train_one_epoch(model: model.VGG,
+    def train_one_epoch(model: model_components.VGG,
                         train_dl: DataLoader,
                         loss_fn: nn.Module,
                         optimizer: torch.optim.Optimizer,
@@ -37,7 +37,7 @@ class ModelManager():
 
 
     @staticmethod
-    def train(model: model.VGG,
+    def train(model: model_components.VGG,
               train_dl: DataLoader, 
               loss_fn: nn.Module,
               optimizer: torch.optim.Optimizer,
@@ -64,7 +64,7 @@ class ModelManager():
         return epoch_loss_lis, epoch_acc_lis
 
     @staticmethod
-    def predict(model: model.VGG, 
+    def predict(model: model_components.VGG, 
                 dataloader: DataLoader, 
                 device: torch.device
                 ):
@@ -84,7 +84,7 @@ class ModelManager():
         return all_preds, all_labels
 
     @staticmethod
-    def get_acc(model:model.VGG, 
+    def get_acc(model:model_components.VGG, 
                 dataloader: DataLoader, 
                 device: torch.device
                 ):
@@ -95,10 +95,8 @@ class ModelManager():
         return acc
 
     @staticmethod
-    def save(model: model.VGG, 
-             file_path: str, 
-             epoch_loss_lis: List[float], 
-             epoch_acc_lis: List[float]
+    def save(model: model_components.VGG, 
+             file_path: str
             ):
         assert file_path != None, "Model file path not defined"
 
@@ -106,19 +104,19 @@ class ModelManager():
             {
                 'model_name': model.name,
                 'model_state_dict': model.state_dict(),  
-                'epoch_loss_lis': epoch_loss_lis,
-                'epoch_acc_lis': epoch_acc_lis
+                'epoch_loss_lis': model.epoch_loss_lis,
+                'epoch_acc_lis': model.epoch_acc_lis
             },
             file_path
         )
-        print("[INFO] Model saved to {file_path}")
+        print(f"[INFO] Model saved to {file_path}")
     
     @staticmethod
-    def load(file_path:str):
+    def load(file_path:str, map_location='cpu'):
         if os.path.exists(file_path):
-            checkpoint = torch.load(file_path)
+            checkpoint = torch.load(file_path, map_location=map_location)
             model_name = checkpoint['model_name']
-            model = model.VGG(model_name)
+            model = model_components.VGG(model_name)
             model.load_state_dict(checkpoint['model_state_dict'])
             model.epoch_loss_lis = checkpoint['epoch_loss_lis']
             model.epoch_acc_lis= checkpoint['epoch_acc_lis']
@@ -138,7 +136,7 @@ class ModelManager():
         pass
 
     @staticmethod
-    def count_layers(model: model.VGG):
+    def count_layers(model: model_components.VGG):
         type_to_count = dict()
         for module in model.modules():
             if module.__class__.__name__ in type_to_count:
