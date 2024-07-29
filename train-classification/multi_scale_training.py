@@ -20,14 +20,14 @@ if __name__ == "__main__":
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     IMG_DIM = 32
     NUM_EPOCHS = 1
-    MODELS_FOLDER = "weights"
+    MODELS_FOLDER = "weights-classification"
     LEARNING_RATE = 1e-2
 
     scale_min = 44
     scale_max = 64 
     
-    scale_54_models = load_scale_54_models("weights/scale_54")
-    train_transform = managers.TransformManager.get_train_transform(scale_min, scale_max, IMG_DIM, IMG_DIM)
+    scale_54_models = load_scale_54_models(f"{MODELS_FOLDER}/scale_54")
+    train_transform = managers.TransformManager.get_train_transform_multi_scale(s_min=scale_min, s_max=scale_max, img_width=IMG_DIM, img_height=IMG_DIM)
     train_dl = managers.DataManager.get_train_dl(train_transform, BATCH_SIZE, NUM_WORKERS)
     loss_fn = nn.CrossEntropyLoss()
 

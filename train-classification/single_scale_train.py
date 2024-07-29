@@ -16,12 +16,12 @@ if __name__ == "__main__":
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     IMG_DIM = 32
     NUM_EPOCHS = 1
-    MODELS_FOLDER = "weights"
+    MODELS_FOLDER = "weights-classification"
     LEARNING_RATE = 1e-2
 
     for scale in [44,54]:
         print(f"[INFO] Training Models for training scale, S: {scale}")
-        train_transform = managers.TransformManager.get_train_transform(s_min=scale, s_max=scale, img_height=32, img_width=32)                                    
+        train_transform = managers.TransformManager.get_train_transform_single_scale(scale=scale, img_width=IMG_DIM, img_height=IMG_DIM)
         train_dl = managers.DataManager.get_train_dl(train_transform, BATCH_SIZE, NUM_WORKERS)
         loss_fn = nn.CrossEntropyLoss()
         for name in model_components.Arch.ARCH.keys():

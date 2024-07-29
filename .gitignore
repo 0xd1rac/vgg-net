@@ -1,4 +1,4 @@
 myenv/
-weights/
+weights-classification/
 */__pycache__/
 src/managers/__pycache__/
