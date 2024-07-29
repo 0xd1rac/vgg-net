@@ -25,10 +25,10 @@ This repository contains the implementation of the VGG network, based on the sem
    cd vgg-net
    ```
 
-2. Install the required packages
-  ```bash
-   pip install -r requirements.txt
-   ```
+2. Install the required packages:
+     ```bash
+     pip install -r requirements.txt
+      ```
 ## Training 
 ### Single Scale Training
    ```bash
