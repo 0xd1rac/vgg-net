@@ -18,6 +18,39 @@ This repository contains the implementation of the VGG network, based on the sem
 ## Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/vgg-network-implementation.git
-   cd vgg-network-implementation
+   git clone git@github.com:0xd1rac/vgg-net.git
+   cd vgg-net
    ```
+
+2. Install the required packages
+  ```bash
+   pip install -r requirements.txt
+   ```
+## Training 
+### Single Scale Training
+   ```bash
+
+   ```
+
+### Multi-Scale Training 
+   ```bash
+
+   ```
+
+## Evaluation
+### Single Scale Training 
+   ```bash
+
+   ```
+
+### Multi-Scale Training
+   ```bash
+
+   ```
+
+### Multi-Crop Training
+   ```bash
+
+   ```
+
+
