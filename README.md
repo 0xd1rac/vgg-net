@@ -2,6 +2,9 @@
 
 This repository contains the implementation of the VGG network, based on the seminal paper "Very Deep Convolutional Networks for Large-Scale Image Recognition". The implementation includes training and evaluation on the Tiny ImageNet dataset, with support for various training and evaluation techniques.
 
+## Dataset
+[link text] (https://huggingface.co/datasets/zh-plus/tiny-imagenet)
+
 ## Features
 - **Single Scale Training**: Train the VGG network with images of a consistent size.
 - **Multi-Scale Training**: Train the VGG network with images of varying scales to enhance robustness.
