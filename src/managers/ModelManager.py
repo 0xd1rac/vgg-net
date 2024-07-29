@@ -1,6 +1,8 @@
 from src.common_imports import *
 from tqdm import tqdm
 import src.model_components as model_components
+import os
+import numpy as np
 
 class ModelManager():
     @staticmethod
@@ -70,29 +72,25 @@ class ModelManager():
                 ):
         model.to(device)
         model.eval()
-        all_preds, all_labels = [] , []
+        all_preds, all_labels, all_probs = [] , [], []
         with torch.no_grad():
             for batch in tqdm(dataloader, desc="Inference", leave=False):
                 images = batch['image'].to(device)
-                labels = batch['labels'].to(device)
+                labels = batch['label'].to(device)
 
                 outputs = model(images)
+                
                 _, batch_preds = outputs.max(1)
-                all_preds.extend(batch_preds.cpu().numpy())
-                all_labels.extend(labels.cpu().numpy())
-        
-        return all_preds, all_labels
+                
+                all_probs.append(outputs.cpu().numpy())
+                all_preds.append(batch_preds.cpu().numpy())
+                all_labels.append(labels.cpu().numpy())
+            
+        all_preds = np.concatenate(all_preds)
+        all_labels = np.concatenate(all_labels)
+        all_probs = np.concatenate(all_probs)
+        return torch.tensor(all_preds), torch.tensor(all_labels),torch.tensor(all_probs)
 
-    @staticmethod
-    def get_acc(model:model_components.VGG, 
-                dataloader: DataLoader, 
-                device: torch.device
-                ):
-        all_preds, all_labels = ModelManager.predict(model, dataloader, device)
-        total_crt = (all_preds == all_preds).sum().item()
-        total_samples = all_labels.size(0)
-        acc = total_crt / total_samples
-        return acc
 
     @staticmethod
     def save(model: model_components.VGG, 
@@ -126,7 +124,10 @@ class ModelManager():
         
         return model
 
-    
+    @staticmethod
+    def load_models(folder_path: str):
+        return [ModelManager.load(os.path.join(folder_path,name)) for name in os.listdir(folder_path)]
+        
     @staticmethod
     def plot_training_loss(epoch_loss_lis: List[float]):
         pass

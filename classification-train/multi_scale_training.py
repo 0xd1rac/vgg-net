@@ -4,11 +4,6 @@ import src.model_components as model_components
 import torch.nn as nn
 import os
 
-def load_scale_54_models(folder_path:str):
-    return [managers.ModelManager.load(os.path.join(folder_path,name)) for name in os.listdir(folder_path)]
-
-def set_up_weights_folder(weights_folder_path:str):
-    pass
 
 if __name__ == "__main__":
     BATCH_SIZE = 256
@@ -26,7 +21,7 @@ if __name__ == "__main__":
     scale_min = 44
     scale_max = 64 
     
-    scale_54_models = load_scale_54_models(f"{MODELS_FOLDER}/scale_54")
+    scale_54_models = managers.ModelManager.load_models(f"{MODELS_FOLDER}/scale_54")
     train_transform = managers.TransformManager.get_train_transform_multi_scale(s_min=scale_min, s_max=scale_max, img_width=IMG_DIM, img_height=IMG_DIM)
     train_dl = managers.DataManager.get_train_dl(train_transform, BATCH_SIZE, NUM_WORKERS)
     loss_fn = nn.CrossEntropyLoss()

@@ -33,5 +33,5 @@ class TransformManager:
 
 
     @staticmethod
-    def get_test_transform():
-        pass
+    def get_test_transform_single_scale(scale, img_width=32, img_height=32):
+        return TransformManager.get_train_transform_single_scale(scale, img_width, img_height)
