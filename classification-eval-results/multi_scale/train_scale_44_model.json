@@ -1,5 +1,5 @@
 {
-    "D": {
+    "B": {
         "s_min": 44,
         "s_max": 44,
         "test_scales": [
@@ -11,7 +11,7 @@
         "top_5_err": 0.375,
         "acc": 0.625
     },
-    "B": {
+    "A-LRN": {
         "s_min": 44,
         "s_max": 44,
         "test_scales": [
@@ -35,7 +35,7 @@
         "top_5_err": 0.375,
         "acc": 0.625
     },
-    "A-LRN": {
+    "D": {
         "s_min": 44,
         "s_max": 44,
         "test_scales": [

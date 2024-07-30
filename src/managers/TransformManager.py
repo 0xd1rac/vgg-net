@@ -31,6 +31,9 @@ class TransformManager:
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
 
+    @staticmethod
+    def apply_transforms_multi_crop(batch, transform):
+        return {'image': [transform(image) for image in batch['image']], 'label': batch['label']}
 
     @staticmethod
     def get_test_transform_single_scale(scale, img_width=32, img_height=32):
