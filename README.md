@@ -7,7 +7,7 @@ This repository contains the implementation of the VGG network, based on the sem
 
 ## Features
 - **Single Scale Training**: Train the VGG network with images of a consistent size.
-- **Multi-Scale Training**: Train the VGG network with images of varying scales to enhance robustness.
+- **Multi-Scale Training**: Train the VGG network with images of varying scales.
 - **Single Scale Evaluation**: Evaluate the model using single scale images.
 - **Multi-Scale Evaluation**: Evaluate the model using images of multiple scales and aggregate predictions.
 - **Multi-Crop Evaluation**: Generate multiple crops of input images and average the predictions for improved accuracy.
