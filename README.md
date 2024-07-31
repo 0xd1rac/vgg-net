@@ -32,6 +32,7 @@ This repository contains the implementation of the VGG network, based on the sem
 ## Training 
 ### Single Scale Training
    ```bash
+      python3 
 
    ```
 
