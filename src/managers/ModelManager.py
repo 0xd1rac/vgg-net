@@ -98,6 +98,9 @@ class ModelManager():
             ):
         assert file_path != None, "Model file path not defined"
 
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+
         torch.save(
             {
                 'model_name': model.name,
@@ -126,7 +129,14 @@ class ModelManager():
 
     @staticmethod
     def load_models(folder_path: str):
-        return [ModelManager.load(os.path.join(folder_path,name)) for name in os.listdir(folder_path)]
+        models = []
+        for model_name in os.listdir(folder_path):
+            model_folder_path = os.path.join(folder_path, model_name)
+            epoch_files = sorted(os.listdir(model_folder_path))
+            model_file_path =os.path.join(model_folder_path, epoch_files[-1])
+            model = ModelManager.load(model_file_path)
+            models.append(model)
+        return models
         
     @staticmethod
     def plot_training_loss(epoch_loss_lis: List[float]):

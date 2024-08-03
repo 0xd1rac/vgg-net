@@ -1,0 +1,15 @@
+{
+    "batch_size": 256,
+    "num_workers": 0,
+    "training_scale": 44,
+    "weights_folder_path": "weights-classification/scale_44",
+    "device": "cpu",
+    "img_width": 32,
+    "img_height": 32,
+    "lr": 1e-3,
+    "momentum": 0.9,
+    "weight_decay": 5e-4,
+    "num_epochs": 2,
+    "preloads": true,
+    "preloads_weights_folder": "weights-classification/scale_44"
+}

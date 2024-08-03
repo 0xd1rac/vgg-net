@@ -1,0 +1,11 @@
+{
+    "batch_size": 256,
+    "num_workers": 0,
+    "s_min": 44,
+    "s_max": 44, 
+    "weights_folder_path": "weights-classification/scale_44",
+    "device": "cpu",
+    "img_width": 32,
+    "img_height": 32,
+    "eval_results_file": "classification-eval-results/single_scale/train_scale_44.json"
+}

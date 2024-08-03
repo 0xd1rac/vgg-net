@@ -4,6 +4,9 @@ from .DataManager import DataManager
 from .ModelManager import ModelManager
 import json
 import torch
+from torch.utils.data import Dataset, DataLoader
+from datasets import load_dataset
+from .CustomMultiCropDataset import CustomMultiCropDataset
 
 class EvalManager:
     @staticmethod
@@ -86,7 +89,7 @@ class EvalManager:
             test_scales = [s_min, int(0.5 * (s_min + s_max)), s_max]
         
         stats_dict = {}
-        print(f"\n[INFO] Evaluating models at single test scales,Q: {test_scales}\n")
+        print(f"\n[INFO] Evaluating models at mulitple test scales,Q: {test_scales}\n")
         
         for model in models_list:
             print(f"[INFO] Performing eval for model {model.name}")
@@ -124,5 +127,74 @@ class EvalManager:
         return stats_dict
 
     @staticmethod
-    def eval_multi_crop():
-        pass
+    def eval_multi_crop(s_min,
+                        s_max,
+                        img_width, 
+                        img_height, 
+                        test_scales,
+                        models_lis,
+                        device,
+                        batch_size,
+                        num_workers,
+                        stats_file_path
+                        ):
+        dataset = load_dataset("zh-plus/tiny-imagenet")
+        test_ds = dataset["valid"]
+        test_ds = test_ds.select(range(80))
+        custom_test_ds = CustomMultiCropDataset(test_ds, test_scales, img_width)
+        print(test_scales)
+        test_dl= DataLoader(custom_test_ds, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+        stats_dict = dict()
+        for model in models_lis:
+            print(f"[INFO] Evaluating model: {model.name}")
+            model.eval()
+            all_preds = []
+            all_probs = []
+            all_labels = []
+
+            with torch.no_grad():
+                for crops, labels in test_dl:
+                    labels = labels.to(device)
+                    crops = crops.to(device)  # Move crops to device
+
+                    # Forward pass through the model
+                    outputs = model(crops)
+
+                    # Convert outputs to probabilities
+                    probs = torch.nn.functional.softmax(outputs, dim=1)
+                    all_probs.append(probs.cpu())
+
+                    # Get the predictions (max over the probabilities)
+                    _, preds = probs.max(1)
+                    all_preds.append(preds.cpu())
+                    all_labels.append(labels.cpu())
+            
+            all_preds = torch.cat(all_preds)
+            all_labels = torch.cat(all_labels)
+            all_probs = torch.cat(all_probs)
+
+            top_1_err = MetricManager.get_top_1_err(all_preds, all_labels)
+            top_5_err = MetricManager.get_top_5_err(all_probs, all_labels)
+            acc = MetricManager.get_accuracy(all_preds, all_labels)
+
+            stats = {
+                "s_min": s_min,
+                "s_max": s_max,
+                "test_scales": test_scales,
+                "top_1_err": top_1_err,
+                "top_5_err": top_5_err,
+                 "acc": acc
+            }
+
+            stats_dict[model.name] = stats
+
+
+            print(f"[INFO] Top 1 Err: {top_1_err}")
+            print(f"[INFO] Top 5 Err: {top_5_err}")
+            print(f"[INFO] Accuracy: {acc}\n")
+        
+        print("=" * 50)
+        EvalManager.save_stats_to_file(stats_file_path, stats_dict)
+
+        return stats_dict
+    
