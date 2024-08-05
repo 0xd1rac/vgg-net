@@ -32,29 +32,27 @@ This repository contains the implementation of the VGG network, based on the sem
 ## Training 
 ### Single Scale Training
    ```bash
-      python3 
+      python3 train.py --config config-train/single_scale.json --train-mode single-scale
 
    ```
 
 ### Multi-Scale Training 
    ```bash
-
+      python3 train.py --config config-train/multi_scale.json --train-mode multi-scale
    ```
 
 ## Evaluation
-### Single Scale Training 
+### Single Scale Evaluation
    ```bash
-
+      python3 eval.py --config config-eval/single_scale.json --test-mode single-scal
    ```
 
-### Multi-Scale Training
+### Multi-Scale Evaluation
    ```bash
-
+      python3 eval.py --config config-eval/multi_scale.json --test-mode multi-scale
    ```
 
-### Multi-Crop Training
+### Multi-Crop Evaluation
    ```bash
-
+      python3 eval.py --config config-eval/multi-crop.json --test-mode multi-crop
    ```
-
-
